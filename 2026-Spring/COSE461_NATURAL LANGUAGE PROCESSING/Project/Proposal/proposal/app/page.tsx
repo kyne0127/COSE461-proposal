@@ -1,4 +1,4 @@
-import { MSVLADeck } from "@/components/MSVLADeck";
+import { MSVLADeck } from "@/components/msvla/MSVLADeck";
 import { ProposalDeck } from "@/components/ProposalDeck";
 import { listProposalDocs, loadMSVLADeckData, loadProposalDeckData } from "@/lib/proposalDoc";
 
