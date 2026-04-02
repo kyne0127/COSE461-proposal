@@ -1,6 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { ProposalDeckData } from "@/types/proposal";
+import { MSVLADeckData, MSVLASlideData, ProposalDeckData } from "@/types/proposal";
 
 type DocEntry = {
   name: string;
@@ -160,6 +160,39 @@ function extractNodeLabel(mermaid: string, nodeId: string, fallback: string): st
   return fallback;
 }
 
+function extractBlockBetween(text: string, startLabel: string, endLabel?: string): string {
+  const start = text.indexOf(startLabel);
+  if (start < 0) {
+    return "";
+  }
+  const from = start + startLabel.length;
+  if (!endLabel) {
+    return text.slice(from).trim();
+  }
+  const end = text.indexOf(endLabel, from);
+  return text.slice(from, end >= 0 ? end : undefined).trim();
+}
+
+function parseMSVLASlides(langBlock: string): MSVLASlideData[] {
+  const sections = [...langBlock.matchAll(/##\s+Slide\s+(\d+)\.\s+([^\n]+)\n([\s\S]*?)(?=\n##\s+Slide\s+\d+\.|$)/g)];
+  return sections.map((match) => {
+    const slideNo = Number(match[1]);
+    const heading = match[2].trim();
+    const body = match[3] ?? "";
+    const visualGuide = extractBlockBetween(body, "**[ Visual & Layout Guide ]**", "**[ Slide Content ]**");
+    const contentBlock = extractBlockBetween(body, "**[ Slide Content ]**", "**[ Presentation Script ]**");
+    const scriptBlock = extractBlockBetween(body, "**[ Presentation Script ]**");
+
+    return {
+      slideNo,
+      heading,
+      visualGuide,
+      contentBlock,
+      scriptBlock,
+    };
+  });
+}
+
 async function listDocEntries(): Promise<DocEntry[]> {
   const byName = new Map<string, DocEntry>();
 
@@ -266,6 +299,37 @@ export async function loadProposalDeckData(preferredDoc?: string): Promise<Propo
       contributions: extractBulletsAfterLabel(s6, ["✨ Expected Contribution", "Expected Contribution"]).slice(0, 6),
       references: extractReferences(s6).slice(0, 5),
     },
+  };
+}
+
+export async function loadMSVLADeckData(preferredDoc?: string): Promise<MSVLADeckData> {
+  let sourceDoc = "inline-default";
+  let rawMarkdown = "";
+
+  const docEntries = await listDocEntries();
+  if (docEntries.length > 0) {
+    const safePreferred = preferredDoc ? normalizeDocName(preferredDoc) : null;
+    const preferredDefault = "ms-vla.md";
+    const defaultEntry = docEntries.find((entry) => entry.name === preferredDefault);
+    const selected =
+      (safePreferred ? docEntries.find((entry) => entry.name === safePreferred) : undefined) ??
+      defaultEntry ??
+      docEntries[0];
+
+    sourceDoc = selected.name;
+    rawMarkdown = await readFile(selected.fullPath, "utf-8");
+  }
+
+  const deckTitle = extractDeckTitle(rawMarkdown);
+  const langBlock = getLanguageBlock(rawMarkdown);
+  const slides = parseMSVLASlides(langBlock);
+
+  return {
+    meta: {
+      deckTitle,
+      sourceDoc,
+    },
+    slides,
   };
 }
 

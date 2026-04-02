@@ -3,31 +3,24 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { EvaluationContributionSlide } from "@/components/slides/EvaluationContributionSlide";
-import { ExperimentPlanSlide } from "@/components/slides/ExperimentPlanSlide";
-import { HardnessSlide } from "@/components/slides/HardnessSlide";
-import { LimitationsSlide } from "@/components/slides/LimitationsSlide";
-import { ProposedIdeaSlide } from "@/components/slides/ProposedIdeaSlide";
-import { TitleProblemSlide } from "@/components/slides/TitleProblemSlide";
 import { DocPicker } from "@/components/DocPicker";
-import { ProposalDeckData } from "@/types/proposal";
+import { MSVLASlide } from "@/components/msvla/MSVLASlide";
+import { MSVLADeckData } from "@/types/proposal";
 
-type ProposalDeckProps = {
-  data: ProposalDeckData;
+type MSVLADeckProps = {
+  data: MSVLADeckData;
   currentDoc: string;
   docOptions: string[];
 };
 
-export function ProposalDeck({ data, currentDoc, docOptions }: ProposalDeckProps) {
+export function MSVLADeck({ data, currentDoc, docOptions }: MSVLADeckProps) {
   const slides = useMemo(
-    () => [
-      { id: "slide-1", label: "S1", node: <TitleProblemSlide data={data.slide1} meta={data.meta} /> },
-      { id: "slide-2", label: "S2", node: <HardnessSlide data={data.slide2} /> },
-      { id: "slide-3", label: "S3", node: <LimitationsSlide data={data.slide3} /> },
-      { id: "slide-4", label: "S4", node: <ProposedIdeaSlide data={data.slide4} /> },
-      { id: "slide-5", label: "S5", node: <ExperimentPlanSlide data={data.slide5} /> },
-      { id: "slide-6", label: "S6", node: <EvaluationContributionSlide data={data.slide6} /> },
-    ],
+    () =>
+      data.slides.map((slide) => ({
+        id: `slide-${slide.slideNo}`,
+        label: `S${slide.slideNo}`,
+        node: <MSVLASlide data={slide} totalSlides={data.slides.length} />,
+      })),
     [data]
   );
 

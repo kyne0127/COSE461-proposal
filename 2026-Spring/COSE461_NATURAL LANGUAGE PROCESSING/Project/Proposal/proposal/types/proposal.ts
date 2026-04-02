@@ -64,3 +64,16 @@ export type ProposalDeckData = {
   slide5: ExperimentSlideData;
   slide6: EvaluationSlideData;
 };
+
+export type MSVLASlideData = {
+  slideNo: number;
+  heading: string;
+  visualGuide: string;
+  contentBlock: string;
+  scriptBlock: string;
+};
+
+export type MSVLADeckData = {
+  meta: DeckMeta;
+  slides: MSVLASlideData[];
+};
