@@ -1,6 +1,6 @@
 import { AlertTriangle, ArrowRight, MessageSquareText } from "lucide-react";
 import { SlideFrame } from "./SlideFrame";
-import { HardnessSlideData } from "@/types/proposal";
+import { HardnessSlideData } from "../../types/proposal";
 
 type HardnessSlideProps = {
   data: HardnessSlideData;

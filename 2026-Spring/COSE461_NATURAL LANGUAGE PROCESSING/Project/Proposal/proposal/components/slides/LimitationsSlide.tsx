@@ -1,5 +1,5 @@
 import { CircleX } from "lucide-react";
-import { LimitationsSlideData } from "@/types/proposal";
+import { LimitationsSlideData } from "../../types/proposal";
 import { SlideFrame } from "./SlideFrame";
 
 type LimitationsSlideProps = {

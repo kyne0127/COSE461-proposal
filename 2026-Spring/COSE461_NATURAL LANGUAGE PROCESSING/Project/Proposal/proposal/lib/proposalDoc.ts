@@ -1,6 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { MSVLADeckData, MSVLASlideData, ProposalDeckData } from "@/types/proposal";
+import { MSVLADeckData, MSVLASlideData, ProposalDeckData } from "../types/proposal";
 
 type DocEntry = {
   name: string;

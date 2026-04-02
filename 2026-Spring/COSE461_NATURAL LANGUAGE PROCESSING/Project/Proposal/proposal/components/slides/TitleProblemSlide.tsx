@@ -1,6 +1,6 @@
 import { ArrowRight, Lightbulb } from "lucide-react";
 import { SlideFrame } from "./SlideFrame";
-import { DeckMeta, TitleProblemSlideData } from "@/types/proposal";
+import { DeckMeta, TitleProblemSlideData } from "../../types/proposal";
 
 type TitleProblemSlideProps = {
   data: TitleProblemSlideData;

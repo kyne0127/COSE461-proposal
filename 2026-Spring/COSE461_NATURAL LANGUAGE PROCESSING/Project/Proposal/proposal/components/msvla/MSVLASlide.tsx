@@ -1,5 +1,5 @@
-import { SlideFrame } from "@/components/slides/SlideFrame";
-import { MSVLASlideData } from "@/types/proposal";
+import { SlideFrame } from "../slides/SlideFrame";
+import { MSVLASlideData } from "../../types/proposal";
 import { BlockMath } from "react-katex";
 
 type MSVLASlideProps = {

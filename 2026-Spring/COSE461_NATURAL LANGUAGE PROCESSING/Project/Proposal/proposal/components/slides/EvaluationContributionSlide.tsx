@@ -1,5 +1,5 @@
 import { CircleHelp, Gauge, Sparkles } from "lucide-react";
-import { EvaluationSlideData } from "@/types/proposal";
+import { EvaluationSlideData } from "../../types/proposal";
 import { SlideFrame } from "./SlideFrame";
 
 type EvaluationContributionSlideProps = {

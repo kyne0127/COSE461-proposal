@@ -1,5 +1,5 @@
 import { ArrowDown, CheckCircle2, GitBranchPlus, Workflow } from "lucide-react";
-import { ProposedIdeaSlideData } from "@/types/proposal";
+import { ProposedIdeaSlideData } from "../../types/proposal";
 import { SlideFrame } from "./SlideFrame";
 
 type ProposedIdeaSlideProps = {

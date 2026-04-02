@@ -3,14 +3,14 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { EvaluationContributionSlide } from "@/components/slides/EvaluationContributionSlide";
-import { ExperimentPlanSlide } from "@/components/slides/ExperimentPlanSlide";
-import { HardnessSlide } from "@/components/slides/HardnessSlide";
-import { LimitationsSlide } from "@/components/slides/LimitationsSlide";
-import { ProposedIdeaSlide } from "@/components/slides/ProposedIdeaSlide";
-import { TitleProblemSlide } from "@/components/slides/TitleProblemSlide";
+import { EvaluationContributionSlide } from "./slides/EvaluationContributionSlide";
+import { ExperimentPlanSlide } from "./slides/ExperimentPlanSlide";
+import { HardnessSlide } from "./slides/HardnessSlide";
+import { LimitationsSlide } from "./slides/LimitationsSlide";
+import { ProposedIdeaSlide } from "./slides/ProposedIdeaSlide";
+import { TitleProblemSlide } from "./slides/TitleProblemSlide";
 import { DocPicker } from "./DocPicker";
-import { ProposalDeckData } from "@/types/proposal";
+import { ProposalDeckData } from "../types/proposal";
 
 type ProposalDeckProps = {
   data: ProposalDeckData;

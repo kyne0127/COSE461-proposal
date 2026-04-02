@@ -1,6 +1,6 @@
 import { Database, FlaskConical, Layers } from "lucide-react";
 import { ReactNode } from "react";
-import { ExperimentSlideData } from "@/types/proposal";
+import { ExperimentSlideData } from "../../types/proposal";
 import { SlideFrame } from "./SlideFrame";
 
 type ExperimentPlanSlideProps = {
