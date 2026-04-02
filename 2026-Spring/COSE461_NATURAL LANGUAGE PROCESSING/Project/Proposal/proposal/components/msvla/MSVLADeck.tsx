@@ -3,9 +3,9 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DocPicker } from "@/components/DocPicker";
-import { MSVLASlide } from "@/components/msvla/MSVLASlide";
-import { MSVLADeckData } from "@/types/proposal";
+import { DocPicker } from "../DocPicker";
+import { MSVLASlide } from "./MSVLASlide";
+import { MSVLADeckData } from "../../types/proposal";
 
 type MSVLADeckProps = {
   data: MSVLADeckData;

@@ -9,7 +9,7 @@ import { HardnessSlide } from "@/components/slides/HardnessSlide";
 import { LimitationsSlide } from "@/components/slides/LimitationsSlide";
 import { ProposedIdeaSlide } from "@/components/slides/ProposedIdeaSlide";
 import { TitleProblemSlide } from "@/components/slides/TitleProblemSlide";
-import { DocPicker } from "@/components/DocPicker";
+import { DocPicker } from "./DocPicker";
 import { ProposalDeckData } from "@/types/proposal";
 
 type ProposalDeckProps = {
