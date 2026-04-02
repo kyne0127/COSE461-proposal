@@ -7,7 +7,7 @@ type DocEntry = {
   fullPath: string;
 };
 
-const docsDirCandidates = [path.join(process.cwd(), "..", "docs"), path.join(process.cwd(), "docs")];
+const docsDirCandidates = [path.join(process.cwd(), "docs"), path.join(process.cwd(), "..", "docs")];
 
 function normalizeDocName(input: string): string | null {
   const basename = path.basename(input).trim();
