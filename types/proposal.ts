@@ -77,3 +77,8 @@ export type MSVLADeckData = {
   meta: DeckMeta;
   slides: MSVLASlideData[];
 };
+
+export type SupplementaryDeckData = {
+  meta: DeckMeta;
+  slides: MSVLASlideData[];
+};

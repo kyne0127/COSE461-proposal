@@ -48,6 +48,11 @@ Our proposal asks whether ambiguity can be transformed into a controllable execu
 * Higher semantic ambiguity leads to higher entropy over manifold coordinate deltas
 * This entropy can directly drive steering and clarification gating decisions
 
+**Concrete Scenario**
+* Instruction: "Put the cup over there."
+* Scene condition: Multiple candidate locations ("there" is unclear).
+* Model behavior: If entropy is low, execute directly; if entropy is high, ask a clarification question first.
+
 $$
 u_s(x)\uparrow \Rightarrow H\big(p(\Delta c \mid x)\big)\uparrow
 $$
@@ -58,6 +63,7 @@ $$
 **[ Presentation Script ]**
 Our central claim is measurable: when language is ambiguous, the action manifold coordinate distribution becomes diffuse.  
 By modeling this distribution explicitly, we can compute entropy and decide whether to execute immediately or request clarification.  
+For example, with an instruction like "put the cup over there" in a scene with multiple possible targets, the model should trigger clarification when entropy is high and proceed directly when entropy is low.  
 This turns linguistic ambiguity into a quantitative control signal.
 
 ---

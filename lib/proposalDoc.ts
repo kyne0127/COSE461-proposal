@@ -1,6 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { MSVLADeckData, MSVLASlideData, ProposalDeckData } from "../types/proposal";
+import { MSVLADeckData, MSVLASlideData, ProposalDeckData, SupplementaryDeckData } from "../types/proposal";
 
 type DocEntry = {
   name: string;
@@ -225,8 +225,8 @@ export async function loadProposalDeckData(preferredDoc?: string): Promise<Propo
   const docEntries = await listDocEntries();
   if (docEntries.length > 0) {
     const safePreferred = preferredDoc ? normalizeDocName(preferredDoc) : null;
-    const preferredDefault = "structure-aware_adaptive_RAG_slides.md";
-    const defaultEntry = docEntries.find((entry) => entry.name === preferredDefault);
+    const preferredDefaults = ["02_structure-aware_adaptive_RAG_slides.md", "structure-aware_adaptive_RAG_slides.md"];
+    const defaultEntry = preferredDefaults.map((name) => docEntries.find((entry) => entry.name === name)).find(Boolean);
     const selected =
       (safePreferred ? docEntries.find((entry) => entry.name === safePreferred) : undefined) ??
       defaultEntry ??
@@ -309,8 +309,39 @@ export async function loadMSVLADeckData(preferredDoc?: string): Promise<MSVLADec
   const docEntries = await listDocEntries();
   if (docEntries.length > 0) {
     const safePreferred = preferredDoc ? normalizeDocName(preferredDoc) : null;
-    const preferredDefault = "ms-vla.md";
-    const defaultEntry = docEntries.find((entry) => entry.name === preferredDefault);
+    const preferredDefaults = ["01_ms-vla.md", "ms-vla.md"];
+    const defaultEntry = preferredDefaults.map((name) => docEntries.find((entry) => entry.name === name)).find(Boolean);
+    const selected =
+      (safePreferred ? docEntries.find((entry) => entry.name === safePreferred) : undefined) ??
+      defaultEntry ??
+      docEntries[0];
+
+    sourceDoc = selected.name;
+    rawMarkdown = await readFile(selected.fullPath, "utf-8");
+  }
+
+  const deckTitle = extractDeckTitle(rawMarkdown);
+  const langBlock = getLanguageBlock(rawMarkdown);
+  const slides = parseMSVLASlides(langBlock);
+
+  return {
+    meta: {
+      deckTitle,
+      sourceDoc,
+    },
+    slides,
+  };
+}
+
+export async function loadSupplementaryDeckData(preferredDoc?: string): Promise<SupplementaryDeckData> {
+  let sourceDoc = "inline-default";
+  let rawMarkdown = "";
+
+  const docEntries = await listDocEntries();
+  if (docEntries.length > 0) {
+    const safePreferred = preferredDoc ? normalizeDocName(preferredDoc) : null;
+    const preferredDefaults = ["03_supplementary-materials.md", "supplementary-materials.md"];
+    const defaultEntry = preferredDefaults.map((name) => docEntries.find((entry) => entry.name === name)).find(Boolean);
     const selected =
       (safePreferred ? docEntries.find((entry) => entry.name === safePreferred) : undefined) ??
       defaultEntry ??

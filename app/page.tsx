@@ -1,6 +1,7 @@
 import { MSVLADeck } from "../components/msvla/MSVLADeck";
 import { ProposalDeck } from "../components/ProposalDeck";
-import { listProposalDocs, loadMSVLADeckData, loadProposalDeckData } from "../lib/proposalDoc";
+import { SupplementaryDeck } from "../components/supplementary/SupplementaryDeck";
+import { listProposalDocs, loadMSVLADeckData, loadProposalDeckData, loadSupplementaryDeckData } from "../lib/proposalDoc";
 
 type HomeProps = {
   searchParams?: Promise<{
@@ -10,13 +11,21 @@ type HomeProps = {
 
 export default async function Home({ searchParams }: HomeProps) {
   const resolvedSearchParams = await searchParams;
+  const docOptions = await listProposalDocs();
   const requestedDocRaw = Array.isArray(resolvedSearchParams?.doc)
     ? resolvedSearchParams?.doc[0]
     : resolvedSearchParams?.doc;
-  const requestedDoc = requestedDocRaw ?? "ms-vla.md";
-  const docOptions = await listProposalDocs();
+  const requestedDoc = requestedDocRaw ?? docOptions[0] ?? "01_ms-vla.md";
 
-  const isMSVLA = (requestedDoc ?? "").toLowerCase() === "ms-vla.md";
+  const requestedDocLower = (requestedDoc ?? "").toLowerCase();
+  const isSupplementary = requestedDocLower.includes("supplementary");
+  const isMSVLA = requestedDocLower.includes("ms-vla");
+
+  if (isSupplementary) {
+    const supplementaryData = await loadSupplementaryDeckData(requestedDoc);
+    return <SupplementaryDeck data={supplementaryData} currentDoc={requestedDoc} docOptions={docOptions} />;
+  }
+
   if (isMSVLA) {
     const msvlaData = await loadMSVLADeckData(requestedDoc);
     return <MSVLADeck data={msvlaData} currentDoc={requestedDoc} docOptions={docOptions} />;

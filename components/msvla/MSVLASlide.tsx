@@ -101,16 +101,33 @@ function stripInlineMarkdown(text: string): string {
 }
 
 function renderListItem(item: string) {
+  const highlightPhrase = '("there" is unclear).';
+  const renderWithPhraseHighlight = (text: string) => {
+    const idx = text.indexOf(highlightPhrase);
+    if (idx < 0) {
+      return <span>{text}</span>;
+    }
+    const before = text.slice(0, idx);
+    const after = text.slice(idx + highlightPhrase.length);
+    return (
+      <>
+        {before}
+        <span className="font-black text-[var(--accent)]">{highlightPhrase}</span>
+        {after}
+      </>
+    );
+  };
+
   const highlighted = item.match(/^\*\*(.+?)\*\*\s*:\s*(.+)$/);
   if (highlighted) {
     return (
       <p className="leading-7 text-foreground">
         <span className="text-base font-black text-[var(--text-strong)]">{highlighted[1]}:</span>{" "}
-        <span className="text-sm">{stripInlineMarkdown(highlighted[2])}</span>
+        <span className="text-sm">{renderWithPhraseHighlight(stripInlineMarkdown(highlighted[2]))}</span>
       </p>
     );
   }
-  return <p className="text-sm leading-7 text-foreground">{stripInlineMarkdown(item)}</p>;
+  return <p className="text-sm leading-7 text-foreground">{renderWithPhraseHighlight(stripInlineMarkdown(item))}</p>;
 }
 
 function renderListCard(title: string, items: string[]) {
@@ -132,6 +149,7 @@ export function MSVLASlide({ data, totalSlides }: MSVLASlideProps) {
   const title = getTitle(data.contentBlock, data.heading);
   const objectives = getBullets(data.contentBlock, ["Research Objectives"]);
   const keyIdea = getBullets(data.contentBlock, ["Key Idea"]);
+  const concreteScenario = getBullets(data.contentBlock, ["Concrete Scenario"]);
   const coreModules = getBullets(data.contentBlock, ["Core Modules"]);
   const datasets = getBullets(data.contentBlock, ["1️⃣ Dataset", "Dataset"]);
   const queryTypes = getBullets(data.contentBlock, ["2️⃣ Query / Instruction Types", "Query / Instruction Types"]);
@@ -192,7 +210,32 @@ export function MSVLASlide({ data, totalSlides }: MSVLASlideProps) {
 
         {data.slideNo === 2 ? (
           <>
-            <div className="md:col-span-7">{renderListCard("Key Idea", keyIdea)}</div>
+            <div className="md:col-span-7">
+              <div className="grid grid-cols-1 gap-4">
+                <section className="border-thin border-[var(--pastel-sky-line)] bg-[var(--pastel-sky)] p-5">
+                  <p className="text-sm uppercase tracking-[0.16em] text-[var(--text-strong)]">Key Idea</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-7 text-foreground">
+                    {keyIdea.map((item) => (
+                      <li key={item} className="border-b border-[var(--line-faint)] pb-2 last:border-b-0">
+                        {renderListItem(item)}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+                {concreteScenario.length > 0 ? (
+                  <section className="border-thin border-[var(--pastel-peach-line)] bg-[var(--pastel-peach)] p-5">
+                    <p className="text-sm uppercase tracking-[0.16em] text-[var(--text-strong)]">Concrete Scenario</p>
+                    <ul className="mt-3 space-y-2 text-sm leading-7 text-foreground">
+                      {concreteScenario.map((item) => (
+                        <li key={item} className="border-b border-[var(--line-faint)] pb-2 last:border-b-0">
+                          {renderListItem(item)}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ) : null}
+              </div>
+            </div>
             <section className="border-thin border-[var(--line-default)] p-5 md:col-span-5">
               <p className="text-sm uppercase tracking-[0.16em] text-[var(--text-muted)]">Equation / Mapping</p>
               <div className="mt-3 space-y-3">
@@ -208,8 +251,15 @@ export function MSVLASlide({ data, totalSlides }: MSVLASlideProps) {
 
         {data.slideNo === 3 ? (
           <>
-            {limitationGroups.map((group) => (
-              <section key={group.title} className="border-thin border-[var(--line-default)] p-5 md:col-span-4">
+            {limitationGroups.map((group, idx) => {
+              const cardStyles = [
+                "border-[var(--pastel-lavender-line)] bg-[var(--pastel-lavender)]",
+                "border-[var(--pastel-pink-line)] bg-[var(--pastel-pink)]",
+                "border-[var(--pastel-mint-line)] bg-[var(--pastel-mint)]",
+              ];
+              const cardStyle = cardStyles[idx % cardStyles.length];
+              return (
+              <section key={group.title} className={`border-thin p-5 md:col-span-4 ${cardStyle}`}>
                 <p className="text-sm uppercase tracking-[0.16em] text-[var(--text-muted)]">{group.title}</p>
                 <ul className="mt-3 space-y-2 text-sm leading-7 text-foreground">
                   {group.points.map((point) => (
@@ -219,25 +269,26 @@ export function MSVLASlide({ data, totalSlides }: MSVLASlideProps) {
                   ))}
                 </ul>
               </section>
-            ))}
+            );
+            })}
           </>
         ) : null}
 
         {data.slideNo === 4 ? (
           <>
-            <section className="border-thin border-[var(--line-default)] p-5 md:col-span-8">
+            <section className="border-thin border-[var(--text-strong)] bg-[var(--surface-panel)] p-5 md:col-span-8">
               <p className="text-sm uppercase tracking-[0.16em] text-[var(--text-muted)]">Pipeline Figure</p>
               <div className="mt-3 space-y-2 text-sm text-foreground">
-                <div className="border-thin border-[var(--line-faint)] bg-[var(--surface-card)] px-3 py-2">{pipelineNodes.input}</div>
-                <div className="border-thin border-[var(--line-faint)] bg-[var(--surface-card)] px-3 py-2">{pipelineNodes.base}</div>
-                <div className="border-thin border-[var(--line-faint)] bg-[var(--surface-card)] px-3 py-2">{pipelineNodes.adapter}</div>
-                <div className="border-thin border-[var(--line-faint)] bg-[var(--surface-card)] px-3 py-2">{pipelineNodes.residual}</div>
-                <div className="border-thin border-[var(--line-faint)] bg-[var(--surface-accent)] px-3 py-2">{pipelineNodes.gate}</div>
+                <div className="border-thin border-[var(--line-strong)] bg-[var(--surface-card)] px-3 py-2">{pipelineNodes.input}</div>
+                <div className="border-thin border-[var(--line-strong)] bg-[var(--surface-card)] px-3 py-2">{pipelineNodes.base}</div>
+                <div className="border-thin border-[var(--line-strong)] bg-[var(--surface-card)] px-3 py-2">{pipelineNodes.adapter}</div>
+                <div className="border-thin border-[var(--line-strong)] bg-[var(--surface-card)] px-3 py-2">{pipelineNodes.residual}</div>
+                <div className="border-thin border-[var(--line-strong)] bg-[var(--surface-accent)] px-3 py-2">{pipelineNodes.gate}</div>
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="border-thin border-[var(--line-faint)] bg-[var(--surface-card)] px-3 py-2">
+                  <div className="border-thin border-[var(--line-strong)] bg-[var(--surface-card)] px-3 py-2">
                     {pipelineNodes.execute}
                   </div>
-                  <div className="border-thin border-[var(--line-faint)] bg-[var(--surface-info)] px-3 py-2">
+                  <div className="border-thin border-[var(--line-strong)] bg-[var(--surface-info)] px-3 py-2">
                     {pipelineNodes.clarify}
                   </div>
                 </div>
