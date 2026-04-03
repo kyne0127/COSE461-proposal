@@ -157,30 +157,33 @@ This setup lets us verify not only whether MS-VLA works, but why it works.
 
 ---
 
-## Slide 6. Evaluation / Expected Contribution
+## Slide 6. NLP-Centric Evaluation / Expected Contribution
 
 **[ Visual & Layout Guide ]**
 * **Layout**: Top row split into metrics and research questions; bottom row for expected contributions and references.
 * **Design Point**: Keep references visually light but always visible for credibility.
 
 **[ Slide Content ]**
-### Evaluation and Expected Contribution
+### Evaluation and Expected Contribution (NLP Focus)
 
 **📊 Evaluation Metrics**
 * Task Success Rate (ambiguous vs clarified)
 * Clarification Precision / Recall (AMBG gate quality)
+* Ambiguity Detection F1 (semantic ambiguity classification quality)
+* Clarification Utility (success gain after language clarification turn)
 * Latency breakdown (base, adapter+residual, clarification cost)
 * Safety and intervention count
 
 **❓ Research Questions**
-* Does manifold-coordinate steering recover success under ambiguity?
-* Does entropy-gated clarification reduce unsafe execution?
+* Does better ambiguity understanding in language improve downstream execution?
+* Does entropy-gated clarification reduce unsafe execution under ambiguous instructions?
+* Which NLP uncertainty signal best predicts clarification necessity?
 * Can we retain low-latency behavior without full replanning?
 
 **✨ Expected Contribution**
-1. A formal uncertainty bridge: semantic uncertainty -> manifold uncertainty
-2. A practical runtime steering design for VLA inference
-3. A safety-aware dialogue loop integrated into action control
+1. An NLP-grounded uncertainty bridge: semantic ambiguity -> manifold uncertainty
+2. A practical ambiguity-to-action control pipeline for multimodal instruction following
+3. A measurable clarification framework linking language understanding quality to safety and success
 
 ---
 <div style="font-size: 12px; color: gray; margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px;">
@@ -193,69 +196,9 @@ This setup lets us verify not only whether MS-VLA works, but why it works.
 </div>
 
 **[ Presentation Script ]**
-We evaluate not only final task success, but also uncertainty handling quality and runtime cost structure.  
-The goal is to prove that ambiguity-aware control can improve both safety and practical deployability.  
-The main value of MS-VLA is a controllable uncertainty-processing architecture, not just a single-point accuracy gain.
+This slide summarizes how we evaluate MS-VLA and what we expect to contribute.  
+We look at task success, clarification quality, latency breakdown, and safety-related interventions together so that both effectiveness and efficiency are visible.  
+Our goal is to show that ambiguity-aware control can improve reliability in practice, not just in a single headline metric.
 
 ---
 
-## Slide 7. Implementation Roadmap
-
-**[ Visual & Layout Guide ]**
-* **Layout**: Timeline format with three phases (left to right) and one deliverable block below.
-* **Design Point**: Use consistent step markers and short milestone labels to keep scheduling clear.
-
-**[ Slide Content ]**
-### Implementation Roadmap
-
-**Phase A — Adapter Pre-Alignment**
-* Build synthetic steering pairs
-* Train Delta c projection with bounded outputs
-
-**Phase B — Joint Runtime Tuning**
-* Attach residual correction head
-* Stabilize adapter/correction interaction
-
-**Phase C — Entropy-Gated Dialogue**
-* Couple AMBG gate with coordinate entropy
-* Validate pause-clarify-resume policy
-
-**Deliverables**
-* Public benchmark splits and ambiguity protocol
-* Runtime latency decomposition report
-* Ablation for adapter, correction, and gate modules
-
-**[ Presentation Script ]**
-The roadmap is staged to isolate risk.  
-We first establish coordinate steering, then combine online correction, and finally integrate entropy-gated dialogue.  
-Each phase produces measurable deliverables, so failure points are visible early.
-
----
-
-## Slide 8. Risk and Mitigation
-
-**[ Visual & Layout Guide ]**
-* **Layout**: Two-column matrix (Risks vs Mitigations) with a final takeaway strip at the bottom.
-* **Design Point**: Keep each risk-mitigation pair one line each for fast presentation pacing.
-
-**[ Slide Content ]**
-### Risk and Mitigation
-
-**Risks**
-* Base model checkpoint availability risk
-* Adapter over-steering instability risk
-* Clarification overhead risk in time-critical tasks
-
-**Mitigations**
-* Base-model-agnostic adapter interface with fallback backbones
-* Bounded Delta c and staged training constraints
-* Entropy threshold tuning with max-turn policy
-
-**Final Takeaway**
-Language is the decision interface, and manifold steering is the execution control surface.
-
-**[ Presentation Script ]**
-The proposal is designed with practical deployment constraints in mind.  
-If checkpoints are delayed, fallback backbones are supported.  
-If steering becomes unstable, bounded outputs and staged tuning limit drift.  
-If dialogue overhead grows, entropy thresholds and turn caps maintain runtime feasibility.
